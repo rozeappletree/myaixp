@@ -17,7 +17,7 @@ source:
 
 - [x] https://www.youtube.com/watch?v=2K7asqt8wMw
 - [x] https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site#configuring-an-apex-domain
-- [ ] https://thomasgauvin.com/writing/setting-up-a-subdomain-github-pages-namecheap/
+- [x] use different repo (https://github.com/rozeappletree/seemyaixp) for subdomain. https://thomasgauvin.com/writing/setting-up-a-subdomain-github-pages-namecheap/
 - [ ] https://www.namecheap.com/support/knowledgebase/article.aspx/9678/2237/how-to-redirect-subdomain-to-a-certain-ip-address-along-with-a-port/
 ---
 
