@@ -15,9 +15,9 @@ CNAME Record  www  rozeappletree.github.io  60mins TTL
 
 source: 
 
-- https://www.youtube.com/watch?v=2K7asqt8wMw
-- https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site#configuring-an-apex-domain
-
+- [x] https://www.youtube.com/watch?v=2K7asqt8wMw
+- [x] https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site#configuring-an-apex-domain
+- https://thomasgauvin.com/writing/setting-up-a-subdomain-github-pages-namecheap/
 
 ---
 
