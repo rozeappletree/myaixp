@@ -13,7 +13,7 @@ A  @  185.199.111.153  AUTO TTL
 CNAME Record  www  rozeappletree.github.io  60mins TTL
 ```
 
-source: 
+references: 
 
 - [x] https://www.youtube.com/watch?v=2K7asqt8wMw
 - [x] https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site#configuring-an-apex-domain
