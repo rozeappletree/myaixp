@@ -1,145 +1,141 @@
 <!DOCTYPE html>
 <html>
 
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Linux localtime/localtime_r 导致 fork 子进程死锁卡死问题的研究</title>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Linux localtime/localtime_r 导致 fork 子进程死锁卡死问题的研究</title>
 
-    <meta name="viewport" content="width=device-width">
-    <meta name="description" content="">
+  <meta name="viewport" content="width=device-width">
+  <meta name="description" content="">
 
-    
-    
 
-    <link rel="canonical" href="https://dongyadoit.com/linux/2019/10/14/linux-fork-child-process-got-deadlock-in-localtime/">
-    <link rel="icon" type="image/png" href="/images/logo.png">
 
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/monster.css">
 
-    
+  <link rel="canonical"
+    href="https://dongyadoit.com/linux/2019/10/14/linux-fork-child-process-got-deadlock-in-localtime/">
+  <link rel="icon" type="image/png" href="/images/logo.png">
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/css/monster.css">
+
+
 
 </head>
 
 
-    <body>
-    
-    <div class="wrapper">
+<body>
 
-      <header class="header">
+  <div class="wrapper">
 
-  <div class="site-title">
-    
-    <h4 class="entry-title"><a href="/linux/2019/10/14/linux-fork-child-process-got-deadlock-in-localtime/">Linux localtime/localtime_r 导致 fork 子进程死锁卡死问题的研究</a></h4>
-    
-  </div>
+    <header class="header">
 
-<div class="links">
-    
-    <a href="/" class="page-link">Blog</a>
-    
-    
-    
-    
-      <a class="page-link"
-        href="/about/">About</a>
-    
-    
-    
-      <a class="page-link"
-        href="/categories/">Categories</a>
-    
-    
-    
-    
-    
-    
-    
-      <a class="page-link"
-        href="/links/">Links</a>
-    
-    
-    
-    
-    
-      <a class="page-link"
-        href="/tags/">Tags</a>
-    
-    
-    <a href="/feed.xml" target="_blank" class="page-link">RSS</a>
-</div>
-</header>
+      <div class="site-title">
 
-      
-      <div class="navi">
-    
-    <a href="/" class="page-link">Blog</a>
-    
-    
-    
-    
-      <a class="page-link"
-        href="/about/">About</a>
-    
-    
-    
-      <a class="page-link"
-        href="/categories/">Categories</a>
-    
-    
-    
-    
-    
-    
-    
-      <a class="page-link"
-        href="/links/">Links</a>
-    
-    
-    
-    
-    
-      <a class="page-link"
-        href="/tags/">Tags</a>
-    
-    
-    <a href="/feed.xml" target="_blank" class="page-link">RSS</a>
-</div>
+        <h4 class="entry-title"><a href="/linux/2019/10/14/linux-fork-child-process-got-deadlock-in-localtime/">Linux
+            localtime/localtime_r 导致 fork 子进程死锁卡死问题的研究</a></h4>
+
+      </div>
+
+      <div class="links">
+
+        <a href="/" class="page-link">Blog</a>
 
 
-      <div class="content">
-        <div class="articles">
-            <div class="entry post">
 
-	<div class="entry-content">
-	  <article class="entry-body">
-	  	
-	  		<h3 id="问题背景">问题背景</h3>
 
-<p>ve 短视频渲染服务程序基于 opengl 和 c/c++ 开发， 服务器渲染现阶段只支持 linux，渲染流程是： 父进程下载数据和素材，再 fork 一个渲染子进程进行渲染。</p>
+        <a class="page-link" href="/about/">About</a>
 
-<p>近期发现生产环境中，极小概率下，会出现渲染子进程假死、卡住以及无任何日志输出的现象。</p>
 
-<p>这个问题在现有生产流程下很难重现，最初采用的解决方法是在父进程中检测渲染进程启动失败时，发送信号 Kill 掉后重试任务。</p>
 
-<p>最近特意抽出时间仔细分析并解决了这个问题，觉得很有意思，记录下来。</p>
+        <a class="page-link" href="/categories/">Categories</a>
 
-<h3 id="问题查找">问题查找</h3>
 
-<h4 id="重现问题">重现问题</h4>
 
-<p>渲染服务由于需要预先下载素材和准备数据，很难达到同时启动多个任务的情况，所以特意重写了多线程支持本地多任务的测试程序。</p>
 
-<p>基本流程就是同一时间启动多个线程，每个线程 fork 一个子进程进行渲染，然后等待所有线程完成。</p>
 
-<p>经过多次测试重现假死的概率很高。</p>
 
-<h4 id="定位问题">定位问题</h4>
 
-<p>稳定重现问题是定位问题的基本条件，在稍微修改测试程序后，使用 debug 编译，正常启动后就可以使用 gdb 调试，找到进程具体卡死的位置，步骤如下：</p>
+        <a class="page-link" href="/links/">Links</a>
 
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>slayer@slayer-B250M-D3H:~<span class="nv">$ </span><span class="nb">sudo </span>gdb <span class="nt">-p</span> 12680
+
+
+
+
+        <a class="page-link" href="/tags/">Tags</a>
+
+
+        <a href="/feed.xml" target="_blank" class="page-link">RSS</a>
+      </div>
+    </header>
+
+
+    <div class="navi">
+
+      <a href="/" class="page-link">Blog</a>
+
+
+
+
+      <a class="page-link" href="/about/">About</a>
+
+
+
+      <a class="page-link" href="/categories/">Categories</a>
+
+
+
+
+
+
+
+      <a class="page-link" href="/links/">Links</a>
+
+
+
+
+
+      <a class="page-link" href="/tags/">Tags</a>
+
+
+      <a href="/feed.xml" target="_blank" class="page-link">RSS</a>
+    </div>
+
+
+    <div class="content">
+      <div class="articles">
+        <div class="entry post">
+
+          <div class="entry-content">
+            <article class="entry-body">
+
+              <h3 id="问题背景">问题背景</h3>
+
+              <p>ve 短视频渲染服务程序基于 opengl 和 c/c++ 开发， 服务器渲染现阶段只支持 linux，渲染流程是： 父进程下载数据和素材，再 fork 一个渲染子进程进行渲染。</p>
+
+              <p>近期发现生产环境中，极小概率下，会出现渲染子进程假死、卡住以及无任何日志输出的现象。</p>
+
+              <p>这个问题在现有生产流程下很难重现，最初采用的解决方法是在父进程中检测渲染进程启动失败时，发送信号 Kill 掉后重试任务。</p>
+
+              <p>最近特意抽出时间仔细分析并解决了这个问题，觉得很有意思，记录下来。</p>
+
+              <h3 id="问题查找">问题查找</h3>
+
+              <h4 id="重现问题">重现问题</h4>
+
+              <p>渲染服务由于需要预先下载素材和准备数据，很难达到同时启动多个任务的情况，所以特意重写了多线程支持本地多任务的测试程序。</p>
+
+              <p>基本流程就是同一时间启动多个线程，每个线程 fork 一个子进程进行渲染，然后等待所有线程完成。</p>
+
+              <p>经过多次测试重现假死的概率很高。</p>
+
+              <h4 id="定位问题">定位问题</h4>
+
+              <p>稳定重现问题是定位问题的基本条件，在稍微修改测试程序后，使用 debug 编译，正常启动后就可以使用 gdb 调试，找到进程具体卡死的位置，步骤如下：</p>
+
+              <div class="language-shell highlighter-rouge">
+                <div class="highlight">
+                  <pre class="highlight"><code>slayer@slayer-B250M-D3H:~<span class="nv">$ </span><span class="nb">sudo </span>gdb <span class="nt">-p</span> 12680
 GNU gdb <span class="o">(</span>Ubuntu 7.11.1-0ubuntu1~16.5<span class="o">)</span> 7.11.1
 Copyright <span class="o">(</span>C<span class="o">)</span> 2016 Free Software Foundation, Inc.
 ...
@@ -189,22 +185,30 @@ Copyright <span class="o">(</span>C<span class="o">)</span> 2016 Free Software F
 <span class="c">#16 0x00007ff64220941d in clone () at ../sysdeps/unix/sysv/linux/x86_64/clone.S:109</span>
 <span class="o">(</span>gdb<span class="o">)</span> 
 
-</code></pre></div></div>
+</code></pre>
+                </div>
+              </div>
 
-<p>确定死锁卡死的点为：</p>
+              <p>确定死锁卡死的点为：</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#0  __lll_lock_wait_private () at ../sysdeps/unix/sysv/linux/x86_64/lowlevellock.S:95
+              <div class="language-plaintext highlighter-rouge">
+                <div class="highlight">
+                  <pre class="highlight"><code>#0  __lll_lock_wait_private () at ../sysdeps/unix/sysv/linux/x86_64/lowlevellock.S:95
 #1  0x00007ff6421bfc76 in __tz_convert (timer=0x7ff6424c8ac0 &lt;tzset_lock&gt;, use_localtime=1, tp=0x7ff6287a39d0)
     at tzset.c:616
 #2  0x00000000013b2c01 in el::base::utils::DateTime::buildTimeInfo (currTime=0x7ff6287a39a0, timeInfo=0x7ff6287a39d0)
     at /home/slayer/workspace/SXVideoEngine-Core/Render/log/easylogging++.cc:1232
-</code></pre></div></div>
+</code></pre>
+                </div>
+              </div>
 
-<p>查看源码，确定 easylogging 在打印日志需要格式化当前时间，调用了 localtime_r 的方法， 查看 localtime.c 源码，</p>
+              <p>查看源码，确定 easylogging 在打印日志需要格式化当前时间，调用了 localtime_r 的方法， 查看 localtime.c 源码，</p>
 
-<p>函数调用栈为： localtime_r -&gt; __localtime_r -&gt; __localtime64_r -&gt; __tz_convert</p>
+              <p>函数调用栈为： localtime_r -&gt; __localtime_r -&gt; __localtime64_r -&gt; __tz_convert</p>
 
-<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">struct</span> <span class="n">tm</span> <span class="o">*</span>
+              <div class="language-c highlighter-rouge">
+                <div class="highlight">
+                  <pre class="highlight"><code><span class="k">struct</span> <span class="n">tm</span> <span class="o">*</span>
 <span class="nf">__localtime64_r</span> <span class="p">(</span><span class="k">const</span> <span class="n">__time64_t</span> <span class="o">*</span><span class="n">t</span><span class="p">,</span> <span class="k">struct</span> <span class="n">tm</span> <span class="o">*</span><span class="n">tp</span><span class="p">)</span>
 <span class="p">{</span>
   <span class="k">return</span> <span class="n">__tz_convert</span> <span class="p">(</span><span class="o">*</span><span class="n">t</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">tp</span><span class="p">);</span>
@@ -221,11 +225,16 @@ Copyright <span class="o">(</span>C<span class="o">)</span> 2016 Free Software F
 <span class="cp">#endif
 </span><span class="n">weak_alias</span> <span class="p">(</span><span class="n">__localtime_r</span><span class="p">,</span> <span class="n">localtime_r</span><span class="p">)</span>
 
-</code></pre></div></div>
+</code></pre>
+                </div>
+              </div>
 
-<p>继续查看 __tz_convert 的源码， 在 tzset.c 中, 可以看到调用了    <code class="language-plaintext highlighter-rouge">__libc_lock_lock (tzset_lock);</code> 加锁，进程就是死锁在这里。</p>
+              <p>继续查看 __tz_convert 的源码， 在 tzset.c 中, 可以看到调用了 <code
+                  class="language-plaintext highlighter-rouge">__libc_lock_lock (tzset_lock);</code> 加锁，进程就是死锁在这里。</p>
 
-<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cm">/* Return the `struct tm' representation of TIMER in the local timezone.
+              <div class="language-c highlighter-rouge">
+                <div class="highlight">
+                  <pre class="highlight"><code><span class="cm">/* Return the `struct tm' representation of TIMER in the local timezone.
    Use local time if USE_LOCALTIME is nonzero, UTC otherwise.  */</span>
 <span class="k">struct</span> <span class="n">tm</span> <span class="o">*</span>
 <span class="nf">__tz_convert</span> <span class="p">(</span><span class="n">__time64_t</span> <span class="n">timer</span><span class="p">,</span> <span class="kt">int</span> <span class="n">use_localtime</span><span class="p">,</span> <span class="k">struct</span> <span class="n">tm</span> <span class="o">*</span><span class="n">tp</span><span class="p">)</span>
@@ -265,114 +274,135 @@ Copyright <span class="o">(</span>C<span class="o">)</span> 2016 Free Software F
     <span class="p">}</span>
   <span class="k">return</span> <span class="n">tp</span><span class="p">;</span>
 <span class="p">}</span>
-</code></pre></div></div>
+</code></pre>
+                </div>
+              </div>
 
-<p><code class="language-plaintext highlighter-rouge">__libc_lock_lock (tzset_lock);</code> 执行了加锁操作， tzset_lock 是通过下面的宏定义的</p>
+              <p><code class="language-plaintext highlighter-rouge">__libc_lock_lock (tzset_lock);</code> 执行了加锁操作，
+                tzset_lock 是通过下面的宏定义的</p>
 
-<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">__libc_lock_define_initialized</span> <span class="p">(</span><span class="k">static</span><span class="p">,</span> <span class="n">tzset_lock</span><span class="p">)</span>
-</code></pre></div></div>
-<p>宏替换后的代码是</p>
+              <div class="language-c highlighter-rouge">
+                <div class="highlight">
+                  <pre class="highlight"><code><span class="n">__libc_lock_define_initialized</span> <span class="p">(</span><span class="k">static</span><span class="p">,</span> <span class="n">tzset_lock</span><span class="p">)</span>
+</code></pre>
+                </div>
+              </div>
+              <p>宏替换后的代码是</p>
 
-<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">static</span> <span class="n">__libc_lock_t</span> <span class="n">tzset_lock</span><span class="p">;</span>
-</code></pre></div></div>
+              <div class="language-c highlighter-rouge">
+                <div class="highlight">
+                  <pre class="highlight"><code><span class="k">static</span> <span class="n">__libc_lock_t</span> <span class="n">tzset_lock</span><span class="p">;</span>
+</code></pre>
+                </div>
+              </div>
 
-<p>最终在 libc-lock.h 中找到 __libc_lock_t 的定义</p>
+              <p>最终在 libc-lock.h 中找到 __libc_lock_t 的定义</p>
 
-<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">typedef</span> <span class="n">pthread_mutex_t</span> <span class="n">__libc_lock_t</span><span class="p">;</span>
-</code></pre></div></div>
+              <div class="language-c highlighter-rouge">
+                <div class="highlight">
+                  <pre class="highlight"><code><span class="k">typedef</span> <span class="n">pthread_mutex_t</span> <span class="n">__libc_lock_t</span><span class="p">;</span>
+</code></pre>
+                </div>
+              </div>
 
-<p>可以确认这是一把静态共享锁。</p>
+              <p>可以确认这是一把静态共享锁。</p>
 
-<ul>
-  <li>为什么这里需要加锁？</li>
-</ul>
+              <ul>
+                <li>为什么这里需要加锁？</li>
+              </ul>
 
-<p>__tz_convert 中计算的时候使用了多个全局变量，比如 _tm_buf, __tz_name, __daylight, __timezone 等全局变量，计算过程中，都有读写，非线程安全。</p>
+              <p>__tz_convert 中计算的时候使用了多个全局变量，比如 _tm_buf, __tz_name, __daylight, __timezone 等全局变量，计算过程中，都有读写，非线程安全。</p>
 
-<ul>
-  <li>为什么会产生死锁？</li>
-</ul>
+              <ul>
+                <li>为什么会产生死锁？</li>
+              </ul>
 
-<p>fork 时，子进程会复制锁和锁的状态，假如复制时，主进程的刚好有个操作进行了加锁操作，此时子进程得到的锁就已经是<strong>上锁</strong>的状态，这时子进程再去加锁，只会永远等待，因为没有任何操作去解锁；主进程中解锁也是解自己的锁，与子进程无关。</p>
+              <p>fork
+                时，子进程会复制锁和锁的状态，假如复制时，主进程的刚好有个操作进行了加锁操作，此时子进程得到的锁就已经是<strong>上锁</strong>的状态，这时子进程再去加锁，只会永远等待，因为没有任何操作去解锁；主进程中解锁也是解自己的锁，与子进程无关。
+              </p>
 
-<p>这样就得到的死锁的原因和根源，剩下的就是找到最合适的解决方法。</p>
+              <p>这样就得到的死锁的原因和根源，剩下的就是找到最合适的解决方法。</p>
 
-<h3 id="解决方法">解决方法</h3>
+              <h3 id="解决方法">解决方法</h3>
 
-<p>办法有很多，最终选择替换 localtime_r 函数，参考了 redis 5.0 实现的 nolocks_localtime 函数，彻底替换了 localtime_r 函数。</p>
+              <p>办法有很多，最终选择替换 localtime_r 函数，参考了 redis 5.0 实现的 nolocks_localtime 函数，彻底替换了 localtime_r 函数。</p>
 
-<p>参考 https://github.com/antirez/redis/blob/5.0.0/src/localtime.c</p>
+              <p>参考 https://github.com/antirez/redis/blob/5.0.0/src/localtime.c</p>
 
-<h3 id="总结">总结</h3>
+              <h3 id="总结">总结</h3>
 
-<p>多线程且有锁操作的程序要谨慎使用 fork, 存在父进程和子进程都要使用的锁，复制后都有可能造成子进程死锁。</p>
+              <p>多线程且有锁操作的程序要谨慎使用 fork, 存在父进程和子进程都要使用的锁，复制后都有可能造成子进程死锁。</p>
 
-<p>最终总结一下解决思路：</p>
+              <p>最终总结一下解决思路：</p>
 
-<ol>
-  <li>避免共享锁的代码</li>
-  <li>在 fork 之后立即调用 execv 方法抛弃父进程的空间数据，启用新的进程内存空间，从根本上独立于父进程，相当重新开了个进程，自然不会有锁的问题</li>
-  <li>使用 pthread_afork 在fork 前释放共享的锁，这个方法使用并不方便，如果引用的库中包含锁，很难对全部的锁进行操作，解锁时也可能导致使用锁的程序状态异常</li>
-</ol>
-
-  		
-	  </article>
-    </div>
-
-</div>
-
-<div class="article-meta">
-    2019-10-14
-     • Category: 
-        
-        <a href="/categories//#linux-ref" >Linux</a>
-        
-    
-     • Tag: 
-        
-            <a href="/tags//#process-ref" >Process</a>
-        
-            <a href="/tags//#localtime-ref" >Localtime</a>
-        
-            <a href="/tags//#fork-ref" >Fork</a>
-        
-    
-</div>
+              <ol>
+                <li>避免共享锁的代码</li>
+                <li>在 fork 之后立即调用 execv 方法抛弃父进程的空间数据，启用新的进程内存空间，从根本上独立于父进程，相当重新开了个进程，自然不会有锁的问题</li>
+                <li>使用 pthread_afork 在fork 前释放共享的锁，这个方法使用并不方便，如果引用的库中包含锁，很难对全部的锁进行操作，解锁时也可能导致使用锁的程序状态异常</li>
+              </ol>
 
 
+            </article>
+          </div>
 
-	<div class="article-author">
-    <div class="avatar">
-    <img width="50" height="50" src="/images/header.jpg" alt=" Avatar"/>
-    </div>
-    <div class="name">
-        <h4><b>MonsterSlayer</b> </h4>
-        Just for fun!
-    </div>
-</div>
+        </div>
 
+        <div class="article-meta">
+          2019-10-14
+          • Category:
 
-	
-	    <div id="disqus_thread"></div>
-<script type="text/javascript">
-    var disqus_shortname = 'monsterslayer';
-	(function() {
-	    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-	    dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
-	    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-
-	
+          <a href="/categories//#linux-ref">Linux</a>
 
 
-<div class="cnzz"><script src="http://s4.cnzz.com/z_stat.php?id=1255123325&web_id=1255123325" language="JavaScript"></script> </div>
+          • Tag:
+
+          <a href="/tags//#process-ref">Process</a>
+
+          <a href="/tags//#localtime-ref">Localtime</a>
+
+          <a href="/tags//#fork-ref">Fork</a>
 
 
         </div>
+
+
+
+        <div class="article-author">
+          <div class="avatar">
+            <img width="50" height="50" src="/images/header.jpg" alt=" Avatar" />
+          </div>
+          <div class="name">
+            <h4><b>rozeappletree</b> </h4>
+            Just for fun!
+          </div>
+        </div>
+
+
+
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+          var disqus_shortname = 'rozeappletree';
+          (function () {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+          })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
+            Disqus.</a></noscript>
+
+
+
+
+        <div class="cnzz">
+          <script src="http://s4.cnzz.com/z_stat.php?id=1255123325&web_id=1255123325" language="JavaScript"></script>
+        </div>
+
+
       </div>
     </div>
+  </div>
 
-    </body>
+</body>
+
 </html>

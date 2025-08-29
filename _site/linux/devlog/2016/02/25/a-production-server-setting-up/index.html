@@ -1,126 +1,121 @@
 <!DOCTYPE html>
 <html>
 
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>记一次生产服务器基本配置过程</title>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>记一次生产服务器基本配置过程</title>
 
-    <meta name="viewport" content="width=device-width">
-    <meta name="description" content="">
+  <meta name="viewport" content="width=device-width">
+  <meta name="description" content="">
 
-    
-    
 
-    <link rel="canonical" href="https://dongyadoit.com/linux/devlog/2016/02/25/a-production-server-setting-up/">
-    <link rel="icon" type="image/png" href="/images/logo.png">
 
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/monster.css">
 
-    
+  <link rel="canonical" href="https://dongyadoit.com/linux/devlog/2016/02/25/a-production-server-setting-up/">
+  <link rel="icon" type="image/png" href="/images/logo.png">
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/css/monster.css">
+
+
 
 </head>
 
 
-    <body>
-    
-    <div class="wrapper">
+<body>
 
-      <header class="header">
+  <div class="wrapper">
 
-  <div class="site-title">
-    
-    <h4 class="entry-title"><a href="/linux/devlog/2016/02/25/a-production-server-setting-up/">记一次生产服务器基本配置过程</a></h4>
-    
-  </div>
+    <header class="header">
 
-<div class="links">
-    
-    <a href="/" class="page-link">Blog</a>
-    
-    
-    
-    
-      <a class="page-link"
-        href="/about/">About</a>
-    
-    
-    
-      <a class="page-link"
-        href="/categories/">Categories</a>
-    
-    
-    
-    
-    
-    
-    
-      <a class="page-link"
-        href="/links/">Links</a>
-    
-    
-    
-    
-    
-      <a class="page-link"
-        href="/tags/">Tags</a>
-    
-    
-    <a href="/feed.xml" target="_blank" class="page-link">RSS</a>
-</div>
-</header>
+      <div class="site-title">
 
-      
-      <div class="navi">
-    
-    <a href="/" class="page-link">Blog</a>
-    
-    
-    
-    
-      <a class="page-link"
-        href="/about/">About</a>
-    
-    
-    
-      <a class="page-link"
-        href="/categories/">Categories</a>
-    
-    
-    
-    
-    
-    
-    
-      <a class="page-link"
-        href="/links/">Links</a>
-    
-    
-    
-    
-    
-      <a class="page-link"
-        href="/tags/">Tags</a>
-    
-    
-    <a href="/feed.xml" target="_blank" class="page-link">RSS</a>
-</div>
+        <h4 class="entry-title"><a href="/linux/devlog/2016/02/25/a-production-server-setting-up/">记一次生产服务器基本配置过程</a>
+        </h4>
+
+      </div>
+
+      <div class="links">
+
+        <a href="/" class="page-link">Blog</a>
 
 
-      <div class="content">
-        <div class="articles">
-            <div class="entry post">
 
-	<div class="entry-content">
-	  <article class="entry-body">
-	  	
-	  		<p>记一次服务器配置，方便以后配置的时候参考。
-用的是阿里云的，ubuntu 14.04 64位。</p>
 
-<h3 id="分区---fdisk">分区 - fdisk</h3>
+        <a class="page-link" href="/about/">About</a>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@iZ94u987x7zZ:/# fdisk /dev/xvdb // 需要分区的磁盘
+
+
+        <a class="page-link" href="/categories/">Categories</a>
+
+
+
+
+
+
+
+        <a class="page-link" href="/links/">Links</a>
+
+
+
+
+
+        <a class="page-link" href="/tags/">Tags</a>
+
+
+        <a href="/feed.xml" target="_blank" class="page-link">RSS</a>
+      </div>
+    </header>
+
+
+    <div class="navi">
+
+      <a href="/" class="page-link">Blog</a>
+
+
+
+
+      <a class="page-link" href="/about/">About</a>
+
+
+
+      <a class="page-link" href="/categories/">Categories</a>
+
+
+
+
+
+
+
+      <a class="page-link" href="/links/">Links</a>
+
+
+
+
+
+      <a class="page-link" href="/tags/">Tags</a>
+
+
+      <a href="/feed.xml" target="_blank" class="page-link">RSS</a>
+    </div>
+
+
+    <div class="content">
+      <div class="articles">
+        <div class="entry post">
+
+          <div class="entry-content">
+            <article class="entry-body">
+
+              <p>记一次服务器配置，方便以后配置的时候参考。
+                用的是阿里云的，ubuntu 14.04 64位。</p>
+
+              <h3 id="分区---fdisk">分区 - fdisk</h3>
+
+              <div class="language-plaintext highlighter-rouge">
+                <div class="highlight">
+                  <pre class="highlight"><code>root@iZ94u987x7zZ:/# fdisk /dev/xvdb // 需要分区的磁盘
 Device contains neither a valid DOS partition table, nor Sun, SGI or OSF disklabel
 Building a new DOS disklabel with disk identifier 0xe55a407e.
 Changes will remain in memory only, until you decide to write them.
@@ -166,10 +161,14 @@ Disk identifier: 0xe55a407e
 Device Boot Start End Blocks Id System
 /dev/xvdb1 2048 419430399 209714176 83 Linux
     
-</code></pre></div></div>
-<h3 id="格式化磁盘">格式化磁盘</h3>
+</code></pre>
+                </div>
+              </div>
+              <h3 id="格式化磁盘">格式化磁盘</h3>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@iZ94u987x7zZ:/data0# mkfs -t ext4 /dev/xvdb1 
+              <div class="language-plaintext highlighter-rouge">
+                <div class="highlight">
+                  <pre class="highlight"><code>root@iZ94u987x7zZ:/data0# mkfs -t ext4 /dev/xvdb1 
 mke2fs 1.42.9 (4-Feb-2014)
 Filesystem label=
 OS type: Linux
@@ -191,139 +190,181 @@ Allocating group tables: done
 Writing inode tables: done 
 Creating journal (32768 blocks): done
 Writing superblocks and filesystem accounting information: done
-</code></pre></div></div>
+</code></pre>
+                </div>
+              </div>
 
-<h3 id="开机挂载磁盘">开机挂载磁盘</h3>
-<ul>
-  <li>
-    <p>查看磁盘uuid</p>
+              <h3 id="开机挂载磁盘">开机挂载磁盘</h3>
+              <ul>
+                <li>
+                  <p>查看磁盘uuid</p>
 
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  root@iZ94u987x7zZ:/data0# blkid 
+                  <div class="language-plaintext highlighter-rouge">
+                    <div class="highlight">
+                      <pre class="highlight"><code>  root@iZ94u987x7zZ:/data0# blkid 
   /dev/xvda1: UUID="af414ad8-9936-46cd-b074-528854656fcd" TYPE="ext4" 
   /dev/xvdb1: UUID="ec60cab1-05ba-4afb-8428-056975c6934e" TYPE="ext4" 
-</code></pre></div>    </div>
-  </li>
-  <li>
-    <p>添加到fstab挂载到指定目录
-vim /etc/fstab 加入：</p>
+</code></pre>
+                    </div>
+                  </div>
+                </li>
+                <li>
+                  <p>添加到fstab挂载到指定目录
+                    vim /etc/fstab 加入：</p>
 
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  UUID=ec60cab1-05ba-4afb-8428-056975c6934e /data0 ext4 defaults 0 1
-</code></pre></div>    </div>
-  </li>
-</ul>
+                  <div class="language-plaintext highlighter-rouge">
+                    <div class="highlight">
+                      <pre class="highlight"><code>  UUID=ec60cab1-05ba-4afb-8428-056975c6934e /data0 ext4 defaults 0 1
+</code></pre>
+                    </div>
+                  </div>
+                </li>
+              </ul>
 
-<h3 id="支持中文">支持中文</h3>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>apt-get install language-pack-zh-hans
-</code></pre></div></div>
+              <h3 id="支持中文">支持中文</h3>
+              <div class="language-plaintext highlighter-rouge">
+                <div class="highlight">
+                  <pre class="highlight"><code>apt-get install language-pack-zh-hans
+</code></pre>
+                </div>
+              </div>
 
-<h3 id="创建普通用户">创建普通用户</h3>
-<ul>
-  <li>
-    <p>添加用户reach，并加入到adm和sudo组：</p>
+              <h3 id="创建普通用户">创建普通用户</h3>
+              <ul>
+                <li>
+                  <p>添加用户reach，并加入到adm和sudo组：</p>
 
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  useradd -d /home/reach -G adm,sudo reach -s /bin/bash
-</code></pre></div>    </div>
-  </li>
-  <li>
-    <p>初始化reach用户的密码：</p>
+                  <div class="language-plaintext highlighter-rouge">
+                    <div class="highlight">
+                      <pre class="highlight"><code>  useradd -d /home/reach -G adm,sudo reach -s /bin/bash
+</code></pre>
+                    </div>
+                  </div>
+                </li>
+                <li>
+                  <p>初始化reach用户的密码：</p>
 
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  passwd "reach"
-</code></pre></div>    </div>
-  </li>
-  <li>
-    <p>初始化用户目录文件</p>
+                  <div class="language-plaintext highlighter-rouge">
+                    <div class="highlight">
+                      <pre class="highlight"><code>  passwd "reach"
+</code></pre>
+                    </div>
+                  </div>
+                </li>
+                <li>
+                  <p>初始化用户目录文件</p>
 
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  cp -r "/etc/skel" "/home/reach"
-</code></pre></div>    </div>
-  </li>
-  <li>
-    <p>需要注意的地方
-  如果需要将一个用户添加到用户组中，千万不能直接用：</p>
+                  <div class="language-plaintext highlighter-rouge">
+                    <div class="highlight">
+                      <pre class="highlight"><code>  cp -r "/etc/skel" "/home/reach"
+</code></pre>
+                    </div>
+                  </div>
+                </li>
+                <li>
+                  <p>需要注意的地方
+                    如果需要将一个用户添加到用户组中，千万不能直接用：</p>
 
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  usermod -G groupA 
-</code></pre></div>    </div>
+                  <div class="language-plaintext highlighter-rouge">
+                    <div class="highlight">
+                      <pre class="highlight"><code>  usermod -G groupA 
+</code></pre>
+                    </div>
+                  </div>
 
-    <p>这样做会使你离开其他用户组，仅仅做为 这个用户组 groupA 的成员。 
-  应该用加上 -a 选项：</p>
+                  <p>这样做会使你离开其他用户组，仅仅做为 这个用户组 groupA 的成员。
+                    应该用加上 -a 选项：</p>
 
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  usermod -a -G sudo reach
-</code></pre></div>    </div>
+                  <div class="language-plaintext highlighter-rouge">
+                    <div class="highlight">
+                      <pre class="highlight"><code>  usermod -a -G sudo reach
+</code></pre>
+                    </div>
+                  </div>
 
-    <p>-a 代表 append， 也就是 将reach添加到 用户组sudo中，但是没有离开其他用户组。</p>
-  </li>
-</ul>
+                  <p>-a 代表 append， 也就是 将reach添加到 用户组sudo中，但是没有离开其他用户组。</p>
+                </li>
+              </ul>
 
-<h3 id="禁用root远程登录">禁用root远程登录</h3>
-<p>配好普通用户并加入sudo组后，就可以禁用root用户远程登录了
-生产机器禁止ROOT远程SSH登录：</p>
+              <h3 id="禁用root远程登录">禁用root远程登录</h3>
+              <p>配好普通用户并加入sudo组后，就可以禁用root用户远程登录了
+                生产机器禁止ROOT远程SSH登录：</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vim /etc/ssh/sshd_config 把
+              <div class="language-plaintext highlighter-rouge">
+                <div class="highlight">
+                  <pre class="highlight"><code>vim /etc/ssh/sshd_config 把
 
 PermitRootLogin yes 改为
 
 PermitRootLogin no 重启sshd服务
 
 service sshd restart
-</code></pre></div></div>
+</code></pre>
+                </div>
+              </div>
 
-<p>基本配置完成了，然后就可以安装nginx,mysql,php5等其他主要东西了，再配置iptables，内核参数，就可以重启测试了</p>
-
-  		
-	  </article>
-    </div>
-
-</div>
-
-<div class="article-meta">
-    2016-02-25
-     • Category: 
-        
-        <a href="/categories//#linux-ref" >Linux</a>
-        
-        <a href="/categories//#devlog-ref" >Devlog</a>
-        
-    
-     • Tag: 
-        
-            <a href="/tags//#linux-ref" >Linux</a>
-        
-    
-</div>
+              <p>基本配置完成了，然后就可以安装nginx,mysql,php5等其他主要东西了，再配置iptables，内核参数，就可以重启测试了</p>
 
 
+            </article>
+          </div>
 
-	<div class="article-author">
-    <div class="avatar">
-    <img width="50" height="50" src="/images/header.jpg" alt=" Avatar"/>
-    </div>
-    <div class="name">
-        <h4><b>MonsterSlayer</b> </h4>
-        Just for fun!
-    </div>
-</div>
+        </div>
 
+        <div class="article-meta">
+          2016-02-25
+          • Category:
 
-	
-	    <div id="disqus_thread"></div>
-<script type="text/javascript">
-    var disqus_shortname = 'monsterslayer';
-	(function() {
-	    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-	    dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
-	    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+          <a href="/categories//#linux-ref">Linux</a>
 
-	
+          <a href="/categories//#devlog-ref">Devlog</a>
 
 
-<div class="cnzz"><script src="http://s4.cnzz.com/z_stat.php?id=1255123325&web_id=1255123325" language="JavaScript"></script> </div>
+          • Tag:
+
+          <a href="/tags//#linux-ref">Linux</a>
 
 
         </div>
+
+
+
+        <div class="article-author">
+          <div class="avatar">
+            <img width="50" height="50" src="/images/header.jpg" alt=" Avatar" />
+          </div>
+          <div class="name">
+            <h4><b>rozeappletree</b> </h4>
+            Just for fun!
+          </div>
+        </div>
+
+
+
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+          var disqus_shortname = 'rozeappletree';
+          (function () {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+          })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
+            Disqus.</a></noscript>
+
+
+
+
+        <div class="cnzz">
+          <script src="http://s4.cnzz.com/z_stat.php?id=1255123325&web_id=1255123325" language="JavaScript"></script>
+        </div>
+
+
       </div>
     </div>
+  </div>
 
-    </body>
+</body>
+
 </html>

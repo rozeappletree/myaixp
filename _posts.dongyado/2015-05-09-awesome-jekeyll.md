@@ -13,7 +13,7 @@ meta:
 author:
     login: slayer
     email: dongyado@gmail.com
-    display_name: MonsterSlayer
+    display_name: rozeappletree
 description: '一个优雅的静态博客系统'
 ---
 
