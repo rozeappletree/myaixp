@@ -21,6 +21,23 @@
     <script src='https://codepen.io/wodniack/pen/YzmgGzP/b66656b6c21a73b4ca05fda86662cc3a.js'></script>
     <script src="./script.js"></script>
 
+    <script>
+        function goFullscreen() {
+            var element = document.documentElement;
+            if (element.requestFullscreen) {
+                element.requestFullscreen();
+            } else if (element.mozRequestFullScreen) { /* Firefox */
+                element.mozRequestFullScreen();
+            } else if (element.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
+                element.webkitRequestFullscreen();
+            } else if (element.msRequestFullscreen) { /* IE/Edge */
+                element.msRequestFullscreen();
+            }
+        }
+
+        document.body.addEventListener('click', goFullscreen);
+        document.body.addEventListener('touchstart', goFullscreen);
+    </script>
 </body>
 
 </html>
