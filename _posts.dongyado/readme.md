@@ -1,1 +1,0 @@
-Posts written by @dongyado

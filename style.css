@@ -1,0 +1,73 @@
+body {
+  width: 100vw;
+  height: 100vh;
+  background: #f40c3f;
+}
+
+a-waves {
+  --x: -0.5rem;
+  --y: 50%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+a-waves:before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0.5rem;
+  height: 0.5rem;
+  background: #160000;
+  border-radius: 50%;
+  transform: translate3d(calc(var(--x) - 50%), calc(var(--y) - 50%), 0);
+  will-change: transform;
+  content: "";
+}
+a-waves canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.ai-expert-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: "Righteous", sans-serif;
+  font-size: 5em; /* Adjust as needed */
+  color: white;
+  text-align: center;
+  z-index: 10; /* Ensure it's above the canvas */
+}
+
+.tagline {
+  position: absolute;
+  bottom: 20px; /* Adjust as needed */
+  right: 20px;
+  font-size: 0.9em; /* Adjust as needed */
+  font-family: "Righteous", sans-serif;
+  color: #f40c3f;
+  background-color: rgba(255, 255, 255, 0.80); 
+  padding: 5px 10px;
+  border-radius: 5px;
+  z-index: 10;
+  white-space: nowrap; /* Prevent text from wrapping */
+}
+
+@media (max-width: 768px) {
+  .ai-expert-text {
+    font-size: 3em; /* Smaller font size for smaller screens */
+  }
+
+  .tagline {
+    font-size: 0.7em; /* Smaller font size for smaller screens */
+    top: 10px; /* Adjust position for smaller screens */
+    right: 10px;
+  }
+}
